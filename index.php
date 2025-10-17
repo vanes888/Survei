@@ -1,8 +1,6 @@
 <?php
-// Mulai output buffering untuk menghindari masalah dengan headers
 ob_start();
 
-// Definisikan konten yang akan dimuat di layout
  $content = '
 <form id="surveyForm">
     <div id="part1">
@@ -107,7 +105,7 @@ ob_start();
 <div id="part2" style="display: none;">
     <div class="section-title">💡 KEPUASAN FASILITAS</div>
     
-    <!-- Pertanyaan 1: Emoji Rating dengan Radio Button -->
+    <!-- Radio Button -->
     <div class="question-card">
         <div class="question-title">Seberapa puaskah Anda dengan ketersediaan stop kontak listrik di area belajar? <span class="required">*</span></div>
         <div class="emoji-rating">
@@ -134,7 +132,7 @@ ob_start();
         </div>
     </div>
 
-    <!-- Pertanyaan 2: Slider dengan Radio Button -->
+    <!-- Slider -->
     <div class="question-card">
         <div class="question-title">Bagaimana kualitas kebersihan kamar mandi/toilet perpustakaan? <span class="required">*</span></div>
         <div class="rating-slider-container">
@@ -181,7 +179,7 @@ ob_start();
         </div>
     </div>
 
-    <!-- Pertanyaan 3: Radio List -->
+    <!-- Radio List -->
     <div class="question-card">
         <div class="question-title">Apakah Anda merasa aman meninggalkan barang pribadi (tas, laptop) saat sebentar ke rak buku atau toilet? <span class="required">*</span></div>
         <div class="radio-list">
@@ -372,7 +370,7 @@ ob_start();
     </div>
 </div>
 
-<!-- Captcha Section -->
+<!-- Captcha -->
 <div id="captchaSection" class="captcha-container">
     <div class="captcha-card">
         <div class="captcha-title">Verifikasi Captcha</div>
@@ -394,7 +392,7 @@ ob_start();
 </div>
 
 <script>
-    // Form and navigation variables
+   
     const form = document.getElementById("surveyForm");
     const part2 = document.getElementById("part2");
     const part3 = document.getElementById("part3");
@@ -409,13 +407,13 @@ ob_start();
     const verifyCaptchaBtn = document.getElementById("verifyCaptcha");
     const pekerjaanLainnyaText = document.getElementById("pekerjaanLainnyaText");
     
-    // Tombol kembali
+   
     const backToPart1Btn = document.getElementById("backToPart1Btn");
     const backToPart2Btn = document.getElementById("backToPart2Btn");
     const backToPart3Btn = document.getElementById("backToPart3Btn");
     const backToPart4Btn = document.getElementById("backToPart4Btn");
     
-    // Captcha elements
+    // Captcha
     const captchaQuestion = document.getElementById("captchaQuestion");
     const captchaInput = document.getElementById("captchaInput");
     const captchaError = document.getElementById("captchaError");
@@ -424,7 +422,7 @@ ob_start();
     let currentPart = 1;
     let captchaAnswer = 8; // Default answer for 5 + 3
     
-    // Generate random captcha
+    // Generate captcha
     function generateCaptcha() {
         const num1 = Math.floor(Math.random() * 10) + 1;
         const num2 = Math.floor(Math.random() * 10) + 1;
@@ -457,19 +455,16 @@ ob_start();
         console.log("Captcha generated:", question, "Answer:", answer); // Debug log
     }
     
-    // Initialize captcha when page loads
     document.addEventListener("DOMContentLoaded", function() {
         generateCaptcha();
-        
-        // Add event listener for refresh captcha button
+
         refreshCaptcha.addEventListener("click", function(e) {
             e.preventDefault();
             console.log("Refresh captcha clicked"); // Debug log
             generateCaptcha();
         });
     });
-    
-    // Show/hide text input for "Lainnya" option
+
     const pekerjaanRadios = document.querySelectorAll("input[name=\"pekerjaan\"]");
     pekerjaanRadios.forEach(radio => {
         radio.addEventListener("change", function() {
@@ -484,23 +479,19 @@ ob_start();
         });
     });
 
-    // Emoji rating interaction
     const emojiOptions = document.querySelectorAll(".emoji-option");
     emojiOptions.forEach(option => {
         option.addEventListener("click", function() {
             const radio = this.querySelector("input[type=\"radio\"]");
             radio.checked = true;
-            
-            // Remove selected class from siblings
+         
             const parent = this.parentElement;
             parent.querySelectorAll(".emoji-option").forEach(opt => opt.classList.remove("selected"));
-            
-            // Add selected class to clicked option
+    
             this.classList.add("selected");
         });
     });
 
-    // Radio list interaction
     const radioListOptions = document.querySelectorAll(".radio-list-option");
     radioListOptions.forEach(option => {
         option.addEventListener("click", function() {
@@ -509,7 +500,6 @@ ob_start();
         });
     });
 
-    // Slider interaction
     const toiletSlider = document.getElementById("toiletSlider");
     const toiletValue = document.getElementById("toiletValue");
     const sliderProgress = document.getElementById("sliderProgress");
@@ -523,18 +513,14 @@ ob_start();
     function updateToiletValue() {
         const value = parseInt(toiletSlider.value);
         const index = value - 1;
-        
-        // Update value display
+
         toiletValue.innerHTML = `${sliderEmojis[index]} ${sliderLabels[index]}`;
-        
-        // Update progress bar
+
         const progressPercent = ((value - 1) / 3) * 100;
         sliderProgress.style.width = progressPercent + "%";
-        
-        // Update radio button selection
+
         toiletRadios[index].checked = true;
-        
-        // Update rating points
+  
         ratingPoints.forEach((point, i) => {
             if (i === index) {
                 point.classList.add("active");
@@ -563,11 +549,9 @@ ob_start();
             emoji.classList.add("show");
         }
     }
-    
-    // Initialize slider
+
     updateToiletValue();
-    
-    // Add event listener for slider input
+   
     toiletSlider.addEventListener("input", function() {
         updateToiletValue();
         showActiveEmoji();
@@ -599,8 +583,7 @@ ob_start();
             hideAllEmojis();
         }, 1500);
     });
-    
-    // Handle rating point clicks directly
+
     ratingPoints.forEach((point, index) => {
         const dot = point.querySelector(".rating-point-dot");
         
@@ -620,15 +603,13 @@ ob_start();
             showActiveEmoji();
         });
     });
-    
-    // Update progress bar
+
     const inputs = form.querySelectorAll("input, select, textarea");
     inputs.forEach(input => {
         input.addEventListener("change", () => updateProgress(currentPart));
         input.addEventListener("input", () => updateProgress(currentPart));
     });
 
-    // Handle next button
     nextBtn.addEventListener("click", function() {
         if (!form.checkValidity()) {
             form.reportValidity();
@@ -642,7 +623,6 @@ ob_start();
             return;
         }
 
-        // Langsung lanjut ke bagian 2 tanpa pengecekan kesediaan
         form.style.display = "none";
         part2.style.display = "block";
         currentPart = 2;
@@ -650,7 +630,6 @@ ob_start();
         scrollToTop();
     });
 
-    // Part 2 to Part 3
     nextPart3Btn.addEventListener("click", function() {
         if (!document.querySelector("input[name=\"stopkontak\"]:checked") ||
             !document.querySelector("input[name=\"toilet\"]:checked") ||
@@ -666,7 +645,6 @@ ob_start();
         scrollToTop();
     });
 
-    // Part 3 to Part 4
     nextPart4Btn.addEventListener("click", function() {
         if (!document.getElementById("durasi").value ||
             !document.getElementById("kebisingan").value ||
@@ -682,7 +660,6 @@ ob_start();
         scrollToTop();
     });
 
-    // Part 4 to Part 5
     nextPart5Btn.addEventListener("click", function() {
         const fasilitasChecked = document.querySelectorAll("input[name=\"fasilitas\"]:checked");
         if (fasilitasChecked.length === 0) {
@@ -697,7 +674,6 @@ ob_start();
         scrollToTop();
     });
 
-    // Handle final submit - show captcha
     submitFinalBtn.addEventListener("click", function() {
         if (!document.getElementById("kritik").value ||
             !document.getElementById("nilaiPlus").value) {
@@ -705,16 +681,13 @@ ob_start();
             return;
         }
 
-        // Hide part 5 and show captcha
         part5.style.display = "none";
         captchaSection.classList.add("show");
         captchaInput.focus();
         scrollToTop();
-        
-        // Generate new captcha when showing
+
         generateCaptcha();
-        
-        // Re-bind event listener for refresh captcha button
+
         refreshCaptcha.onclick = function(e) {
             e.preventDefault();
             console.log("Refresh captcha clicked"); // Debug log
@@ -722,7 +695,6 @@ ob_start();
         };
     });
 
-    // Verify captcha and submit form
     verifyCaptchaBtn.addEventListener("click", function() {
         const userAnswer = parseInt(captchaInput.value);
         
@@ -731,8 +703,7 @@ ob_start();
             captchaInput.focus();
             return;
         }
-        
-        // Captcha is correct, submit the form
+
         const pekerjaanValue = document.querySelector("input[name=\"pekerjaan\"]:checked").value;
         const fasilitasChecked = Array.from(document.querySelectorAll("input[name=\"fasilitas\"]:checked")).map(el => el.value);
         const masalahChecked = Array.from(document.querySelectorAll("input[name=\"masalah\"]:checked")).map(el => el.value);
@@ -760,8 +731,7 @@ ob_start();
         };
 
         console.log("Data Survey Lengkap:", formData);
-        
-        // Hide captcha and show success message
+  
         captchaSection.classList.remove("show");
         successMessage.classList.add("show");
         progressBar.style.width = "100%";
@@ -771,7 +741,6 @@ ob_start();
         }, 4000);
     });
 
-    // Tombol kembali
     backToPart1Btn.addEventListener("click", function() {
         part2.style.display = "none";
         form.style.display = "block";
@@ -806,9 +775,7 @@ ob_start();
 </script>
 ';
 
-// Include layout file dengan passing variabel $content
 include 'layout.php';
 
-// Flush output buffer
 ob_end_flush();
 ?>
