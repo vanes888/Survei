@@ -144,15 +144,18 @@ ob_start();
                 <input type="radio" id="toilet4" name="toilet" value="Sangat Puas">
             </div>
             
+            <!-- Slider Track -->
             <div class="rating-slider-track">
+                <!-- Progress Bar -->
                 <div class="rating-slider-progress" id="sliderProgress"></div>
                 
+                <!-- Rating Points with Emojis -->
                 <div class="rating-points">
                     <div class="rating-point" data-value="1">
                         <div class="rating-point-emoji">😤</div>
                         <div class="rating-point-dot"></div>
                     </div>
-                    <div class="rating-point active" data-value="2">
+                    <div class="rating-point" data-value="2">
                         <div class="rating-point-emoji">😕</div>
                         <div class="rating-point-dot"></div>
                     </div>
@@ -165,17 +168,18 @@ ob_start();
                         <div class="rating-point-dot"></div>
                     </div>
                 </div>
-                
-                <input type="range" id="toiletSlider" name="toiletSlider" min="1" max="4" value="2" step="1" class="rating-slider">
             </div>
             
+            <!-- Labels -->
             <div class="rating-labels">
-                <div class="rating-label">Sangat Tidak Puas</div>
-                <div class="rating-label">Kurang Puas</div>
-                <div class="rating-label">Cukup Puas</div>
-                <div class="rating-label">Sangat Puas</div>
+                <div class="rating-label">Sangat<br>Tidak Puas</div>
+                <div class="rating-label">Kurang<br>Puas</div>
+                <div class="rating-label">Cukup<br>Puas</div>
+                <div class="rating-label">Sangat<br>Puas</div>
             </div>
-            <div class="rating-value" id="toiletValue">😕 Kurang Puas</div>
+            
+            <!-- Current Value Display -->
+            <div class="rating-value" id="toiletValue">Pilih salah satu</div>
         </div>
     </div>
 
@@ -500,7 +504,6 @@ ob_start();
         });
     });
 
-    const toiletSlider = document.getElementById("toiletSlider");
     const toiletValue = document.getElementById("toiletValue");
     const sliderProgress = document.getElementById("sliderProgress");
     const toiletRadios = document.querySelectorAll("input[name=\"toilet\"]");
@@ -509,14 +512,22 @@ ob_start();
     const sliderEmojis = ["😤", "😕", "😊", "😍"];
     
     let sliderTimeout;
+    let currentToiletValue = null; /* Belum ada pilihan */
     
-    function updateToiletValue() {
-        const value = parseInt(toiletSlider.value);
+    function updateToiletValue(value) {
         const index = value - 1;
+        currentToiletValue = value;
 
         toiletValue.innerHTML = `${sliderEmojis[index]} ${sliderLabels[index]}`;
+        toiletValue.classList.add("selected");
 
-        const progressPercent = ((value - 1) / 3) * 100;
+        /* Calculate progress bar based on actual position of the point */
+        const track = sliderProgress.parentElement;
+        const trackWidth = track.offsetWidth;
+        const clickedPoint = ratingPoints[index];
+        const pointCenter = clickedPoint.offsetLeft + (clickedPoint.offsetWidth / 2);
+        const progressPercent = (pointCenter / trackWidth) * 100;
+        
         sliderProgress.style.width = progressPercent + "%";
 
         toiletRadios[index].checked = true;
@@ -539,10 +550,8 @@ ob_start();
         });
     }
     
-    function showActiveEmoji() {
+    function showEmojiForIndex(index) {
         hideAllEmojis();
-        const value = parseInt(toiletSlider.value);
-        const index = value - 1;
         const activePoint = ratingPoints[index];
         const emoji = activePoint.querySelector(".rating-point-emoji");
         if (emoji) {
@@ -550,48 +559,32 @@ ob_start();
         }
     }
 
-    updateToiletValue();
-   
-    toiletSlider.addEventListener("input", function() {
-        updateToiletValue();
-        showActiveEmoji();
-        
-        clearTimeout(sliderTimeout);
-        sliderTimeout = setTimeout(() => {
-            hideAllEmojis();
-        }, 1500);
-    });
+    /* Initialize: hide progress bar and show placeholder text */
+    sliderProgress.style.width = "0%";
+    toiletValue.innerHTML = "Pilih salah satu";
     
-    toiletSlider.addEventListener("mousedown", function() {
-        showActiveEmoji();
-    });
+    /* Adjust track background to end at last point */
+    function adjustTrackBackground() {
+        const track = sliderProgress.parentElement;
+        const lastPoint = ratingPoints[ratingPoints.length - 1];
+        const trackWidth = track.offsetWidth;
+        const lastPointCenter = lastPoint.offsetLeft + (lastPoint.offsetWidth / 2);
+        const trackBgPercent = (lastPointCenter / trackWidth) * 100;
+        track.style.setProperty("--track-width", trackBgPercent + "%");
+    }
     
-    toiletSlider.addEventListener("mouseup", function() {
-        clearTimeout(sliderTimeout);
-        sliderTimeout = setTimeout(() => {
-            hideAllEmojis();
-        }, 1500);
-    });
-    
-    toiletSlider.addEventListener("touchstart", function() {
-        showActiveEmoji();
-    });
-    
-    toiletSlider.addEventListener("touchend", function() {
-        clearTimeout(sliderTimeout);
-        sliderTimeout = setTimeout(() => {
-            hideAllEmojis();
-        }, 1500);
-    });
+    /* Adjust on load and resize */
+    window.addEventListener("load", adjustTrackBackground);
+    window.addEventListener("resize", adjustTrackBackground);
+    adjustTrackBackground();
 
+    // Handle click on rating points
     ratingPoints.forEach((point, index) => {
-        const dot = point.querySelector(".rating-point-dot");
-        
-        dot.addEventListener("click", function(e) {
+        point.addEventListener("click", function(e) {
             e.stopPropagation();
-            toiletSlider.value = index + 1;
-            updateToiletValue();
-            showActiveEmoji();
+            const value = index + 1;
+            updateToiletValue(value);
+            showEmojiForIndex(index);
             
             clearTimeout(sliderTimeout);
             sliderTimeout = setTimeout(() => {
@@ -599,8 +592,13 @@ ob_start();
             }, 1500);
         });
         
-        dot.addEventListener("mouseenter", function() {
-            showActiveEmoji();
+        point.addEventListener("mouseenter", function() {
+            showEmojiForIndex(index);
+            
+            clearTimeout(sliderTimeout);
+            sliderTimeout = setTimeout(() => {
+                hideAllEmojis();
+            }, 1500);
         });
     });
 
@@ -628,6 +626,7 @@ ob_start();
         currentPart = 2;
         updateProgress(currentPart);
         scrollToTop();
+        setTimeout(adjustTrackBackground, 50);
     });
 
     nextPart3Btn.addEventListener("click", function() {
@@ -755,6 +754,7 @@ ob_start();
         currentPart = 2;
         updateProgress(currentPart);
         scrollToTop();
+        setTimeout(adjustTrackBackground, 50);
     });
 
     backToPart3Btn.addEventListener("click", function() {

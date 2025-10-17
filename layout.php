@@ -175,89 +175,46 @@
         /* Slider Rating */
         .rating-slider-container {
             position: relative;
-            margin: 20px 0;
-            padding: 10px 0;
+            margin: 30px 0 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
         }
 
         .rating-slider-track {
             position: relative;
-            height: 12px;
+            height: 14px;
+            background: transparent;
+            border-radius: 7px;
+            margin: 50px 0 30px;
+            padding: 0;
+        }
+
+        .rating-slider-track::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: var(--track-width, 75%);
+            height: 100%;
             background: #e0e0e0;
-            border-radius: 6px;
-            margin: 40px 0 20px;
+            border-radius: 7px;
+            z-index: 0;
         }
 
         .rating-slider-progress {
             position: absolute;
             height: 100%;
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            border-radius: 6px;
+            border-radius: 7px;
             width: 33.33%;
-            transition: width 0.3s ease;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             z-index: 1;
         }
 
         .rating-slider {
-            position: absolute;
-            width: 100%;
-            height: 12px;
-            background: transparent;
-            outline: none;
-            -webkit-appearance: none;
-            z-index: 5;
-            cursor: pointer;
-            top: 0;
-        }
-
-        .rating-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid #667eea;
-            cursor: pointer;
-            box-shadow: 0 2px 12px rgba(102, 126, 234, 0.5);
-            transition: all 0.2s ease;
-            position: relative;
-            z-index: 10;
-        }
-
-        .rating-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 3px 16px rgba(102, 126, 234, 0.6);
-        }
-
-        .rating-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            border: 4px solid #667eea;
-            cursor: pointer;
-            box-shadow: 0 2px 12px rgba(102, 126, 234, 0.5);
-            transition: all 0.2s ease;
-        }
-
-        .rating-slider::-moz-range-thumb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 3px 16px rgba(102, 126, 234, 0.6);
-        }
-
-        .rating-slider::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 12px;
-            background: transparent;
-            border-radius: 6px;
-        }
-
-        .rating-slider::-moz-range-track {
-            width: 100%;
-            height: 12px;
-            background: transparent;
-            border-radius: 6px;
+            display: none;
         }
 
         .rating-points {
@@ -270,8 +227,7 @@
             top: 0;
             left: 0;
             z-index: 6;
-            pointer-events: none;
-            padding: 0 14px;
+            padding: 0;
             box-sizing: border-box;
         }
 
@@ -279,40 +235,46 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             position: relative;
-            pointer-events: all;
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
+            flex: 1;
+            height: 28px;
+            cursor: pointer;
         }
 
         .rating-point-dot {
-            width: 18px;
-            height: 18px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: white;
-            border: 3px solid #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
+            border: 3px solid #9ca3af;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            pointer-events: all;
             position: relative;
             z-index: 3;
         }
 
+        .rating-point:hover .rating-point-dot {
+            transform: scale(1.15);
+            border-color: #667eea;
+            box-shadow: 0 3px 14px rgba(102, 126, 234, 0.4);
+        }
+
         .rating-point.active .rating-point-dot {
             background: #667eea;
-            transform: scale(1.2);
-            box-shadow: 0 3px 12px rgba(102, 126, 234, 0.5);
+            border-color: #667eea;
+            transform: scale(1.35);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
         }
 
         .rating-point-emoji {
             position: absolute;
-            top: -38px;
-            font-size: 35px;
+            top: -45px;
+            font-size: 38px;
             opacity: 0;
-            transform: scale(0.5) translateY(10px);
-            transition: all 0.3s ease;
+            transform: scale(0.5) translateY(15px);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             white-space: nowrap;
         }
@@ -325,26 +287,71 @@
         .rating-labels {
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
+            align-items: flex-start;
+            margin-top: 20px;
+            padding: 0;
+            position: relative;
         }
 
         .rating-label {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
             flex: 1;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+            font-weight: 500;
+            padding: 0;
         }
 
         .rating-value {
             text-align: center;
-            margin-top: 15px;
-            padding: 10px 15px;
-            background: #f0f3ff;
-            border-radius: 8px;
-            color: #667eea;
+            margin-top: 20px;
+            padding: 14px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            color: #999;
             font-weight: 600;
             font-size: 16px;
-            display: inline-block;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .rating-value.selected {
+            background: linear-gradient(135deg, #f0f3ff 0%, #e6ebff 100%);
+            border: 2px solid #667eea;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .rating-slider-container {
+                padding: 15px;
+            }
+
+            .rating-slider-track {
+                margin: 45px 0 25px;
+            }
+
+            .rating-labels {
+                padding: 0;
+            }
+
+            .rating-label {
+                font-size: 10px;
+                padding: 0;
+            }
+
+            .rating-value {
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+
+            .rating-point-emoji {
+                font-size: 32px;
+            }
         }
 
         .submit-btn {
