@@ -721,13 +721,11 @@
     </div>
 
     <script>
-        // Global variables and functions
         const progressBar = document.getElementById('progressBar');
         const formContent = document.getElementById('formContent');
         const successMessage = document.getElementById('successMessage');
         const thankYouMessage = document.getElementById('thankYouMessage');
-        
-        // Update progress bar
+ 
         function updateProgress(currentPart) {
             let progress = 0;
             if (currentPart === 1) {
@@ -743,8 +741,7 @@
             }
             progressBar.style.width = progress + '%';
         }
-        
-        // Smooth scroll to top
+
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
